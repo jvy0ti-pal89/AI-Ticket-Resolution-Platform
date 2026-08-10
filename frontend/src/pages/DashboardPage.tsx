@@ -33,7 +33,9 @@ export default function DashboardPage() {
       </div>
 
       <DashboardOverview metrics={metrics} loading={loading} />
-      <RecentTickets tickets={metrics?.recent_tickets ?? []} loading={loading} />
+      <RecentTickets 
+      tickets={(metrics?.recent_tickets as unknown as Ticket[]) || []} 
+      loading={loading} />
     </div>
   );
 }

@@ -12,7 +12,6 @@ api.interceptors.request.use((config) => {
   const token = localStorage.getItem("ai_ticket_token");
   if (token) {
     if (!config.headers) {
-      config.headers = {};
     }
     config.headers.Authorization = `Bearer ${token}`;
   }
