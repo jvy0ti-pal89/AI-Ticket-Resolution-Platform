@@ -1,45 +1,37 @@
-name: CI Pipeline
+version: '3.8'
 
-on:
-  push:
-    branches: [ master, main ]
-  pull_request:
-    branches: [ master, main ]
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ai_ticket_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
 
-jobs:
-  backend-checks:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
+  backend:
+    image: python:3.11-slim
+    working_dir: /app
+    volumes:
+      - ./backend:/app
+    env_file: .env
+    command: bash -lc "pip install --no-cache-dir -r requirements.txt && uvicorn app.main:app --host 0.0.0.0 --port 8000"
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.11'
+  frontend:
+    image: node:18
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+    command: bash -lc "npm ci && npm run dev -- --host 0.0.0.0"
+    ports:
+      - "5173:5173"
 
-      - name: Install Backend Dependencies
-        run: |
-          cd backend
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-
-      - name: Compile Main Application
-        run: |
-          cd backend
-          python -m py_compile app/main.py
-
-  frontend-checks:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-
-      - name: Install & Build Frontend
-        run: |
-          cd frontend
-          npm ci
-          npm run build
+volumes:
+  pgdata:
