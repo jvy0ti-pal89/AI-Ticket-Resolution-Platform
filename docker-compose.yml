@@ -7,7 +7,7 @@ on:
     branches: [ master, main ]
 
 jobs:
-  backend-tests:
+  backend-checks:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -17,18 +17,18 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install Dependencies
+      - name: Install Backend Dependencies
         run: |
           cd backend
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run Backend Syntax Check
+      - name: Compile Main Application
         run: |
           cd backend
           python -m py_compile app/main.py
 
-  frontend-build:
+  frontend-checks:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
