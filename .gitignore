@@ -1,0 +1,47 @@
+# ==========================================
+# Environments & Secrets (CRITICAL)
+# ==========================================
+.env
+.env.*
+!.env.example
+*.env
+
+# ==========================================
+# Python & Backend (FastAPI, Virtualenvs)
+# ==========================================
+venv/
+.venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+
+# User Uploaded Files / Local Media
+backend/app/uploads/*
+!backend/app/uploads/.gitkeep
+
+# Alembic database migration cache
+alembic/readme.txt
+
+# ==========================================
+# Node / Frontend (React / Vite)
+# ==========================================
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+frontend/.nx/
+.npm
+*.log
+
+# ==========================================
+# IDEs & System Files
+# ==========================================
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db

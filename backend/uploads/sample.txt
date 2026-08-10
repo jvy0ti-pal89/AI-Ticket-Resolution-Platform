@@ -1,0 +1,20 @@
+# VPN Troubleshooting & Password Reset Guide
+
+## Overview
+This document provides standard operating procedures for resolving user VPN connection failures and password reset requests.
+
+## Common Issues & Solutions
+
+### 1. Invalid Credentials / Password Expired
+If a user is unable to log into the corporate VPN:
+- Direct the user to the self-service portal at https://identity.company.com
+- Ensure their Active Directory password has not expired.
+- If locked out, an IT administrator must unlock the account in Active Directory.
+
+### 2. MFA Authentication Failures
+- Verify that the user's authenticator app time is synchronized.
+- Ask the user to re-register their device if push notifications fail to arrive.
+
+### 3. Split Tunneling vs Full Tunneling
+- For accessing internal servers, ensure the user is connected to the 'Corporate-Full' profile.
+- Standard web browsing should use the 'Corporate-Split' profile to optimize bandwidth.
