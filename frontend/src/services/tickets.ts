@@ -20,3 +20,15 @@ export async function updateTicket(ticketId: number, data: Partial<Ticket>) {
   const response = await api.put<Ticket>(`/tickets/${ticketId}`, data);
   return response.data;
 }
+
+export async function reviewTicket(
+  ticketId: number,
+  data: {
+    action: "approve" | "edit" | "escalate";
+    resolution?: string;
+    escalation_reason?: string;
+  }
+) {
+  const response = await api.post<Ticket>(`/tickets/${ticketId}/review`, data);
+  return response.data;
+}
