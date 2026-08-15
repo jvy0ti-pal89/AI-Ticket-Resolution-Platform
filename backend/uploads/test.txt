@@ -1,0 +1,5 @@
+vpn resolution guide
+Title: VPN Troubleshooting Guide
+1. Ensure your internet connection is active.
+2. Open Cisco AnyConnect and verify the server address is vpn.company.com.
+3. Restart the VPN service if error 422 occurs.

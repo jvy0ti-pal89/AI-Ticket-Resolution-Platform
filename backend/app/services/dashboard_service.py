@@ -7,16 +7,21 @@ from app.models.ticket import Ticket
 from app.models.user import User
 
 
+
 def _ticket_query_for_user(db: Session, user: User):
     query = db.query(Ticket)
+
     if user.role == "admin":
         return query
 
     if user.role == "engineer":
-        return query.filter(Ticket.assigned_to_id == user.id)
+        return query.filter(
+            (Ticket.assigned_to_id == user.id)
+            | (Ticket.status == "PENDING_REVIEW")
+            | (Ticket.reviewed_by_id == user.id)
+        )
 
     return query.filter(Ticket.user_id == user.id)
-
 
 def get_dashboard_metrics(db: Session, user: User) -> Dict[str, Any]:
     query = _ticket_query_for_user(db, user)

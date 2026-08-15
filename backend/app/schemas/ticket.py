@@ -32,7 +32,7 @@ class TicketReviewRequest(BaseModel):
     resolution: Optional[str] = None
     escalation_reason: Optional[str] = None
 
-    @root_validator
+    @root_validator(skip_on_failure=True)
     def validate_review_request(cls, values):
         action = values.get("action")
         resolution = values.get("resolution")

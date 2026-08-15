@@ -26,10 +26,16 @@ def ensure_is_admin(user: User) -> None:
 def ensure_can_view_ticket(user: User, ticket: Ticket) -> None:
     if user.role == ADMIN:
         return
-    if user.role == ENGINEER and ticket.assigned_to_id == user.id:
-        return
+
+    if user.role == ENGINEER:
+        if ticket.status == "PENDING_REVIEW":
+            return
+        if ticket.assigned_to_id == user.id:
+            return
+
     if user.role == EMPLOYEE and ticket.user_id == user.id:
         return
+
     raise HTTPException(
         status_code=status.HTTP_403_FORBIDDEN,
         detail="User does not have permission to view this ticket",
@@ -52,8 +58,13 @@ def ensure_can_modify_ticket(user: User, ticket: Ticket) -> None:
 def ensure_can_review_ticket(user: User, ticket: Ticket) -> None:
     if user.role == ADMIN:
         return
-    if user.role == ENGINEER and ticket.assigned_to_id == user.id:
-        return
+
+    if user.role == ENGINEER:
+        if ticket.status == "PENDING_REVIEW":
+            return
+        if ticket.assigned_to_id == user.id:
+            return
+
     raise HTTPException(
         status_code=status.HTTP_403_FORBIDDEN,
         detail="User does not have permission to review this ticket",

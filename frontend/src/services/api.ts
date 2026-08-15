@@ -8,14 +8,21 @@ const api = axios.create({
 });
 
 // Automatically attach stored JWT token to every outgoing request.
+
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("ai_ticket_token");
+  // Check for 'ai_ticket_token', fallback to 'token' or 'access_token'
+  const token =
+    localStorage.getItem("ai_ticket_token") ||
+    localStorage.getItem("token") ||
+    localStorage.getItem("access_token");
+
   if (token) {
-    if (!config.headers) {
-    }
+    config.headers = config.headers || {};
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
+}, (error) => {
+  return Promise.reject(error);
 });
 
 export const setAuthToken = (token: string | null) => {

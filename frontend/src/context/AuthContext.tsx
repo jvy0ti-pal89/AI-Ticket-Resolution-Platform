@@ -15,10 +15,11 @@ const storageTokenKey = "ai_ticket_token";
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(null);
+  const [token, setToken] = useState<string | null>(() => 
+    localStorage.getItem(storageTokenKey)
+  );
   const [loading, setLoading] = useState(true);
 
-  // Fetch the authenticated user profile using our Axios instance
   const fetchCurrentUser = async (authToken: string) => {
     try {
       setAuthToken(authToken);
@@ -27,7 +28,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setToken(authToken);
     } catch (err: any) {
       console.error("Failed to fetch user profile:", err);
-      // ONLY log out if the backend specifically returns 401 Unauthorized
       if (err.response?.status === 401) {
         logout();
       }
@@ -46,12 +46,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const login = async (email: string, password: string) => {
+    setLoading(true);
     const response = await api.post("/auth/login", { email, password });
-    const authToken = response.data.access_token;
+    const authToken = response.data.access_token || response.data.token;
 
+    // Immediately save and set headers before calling /auth/me
     localStorage.setItem(storageTokenKey, authToken);
     setAuthToken(authToken);
-    await fetchCurrentUser(authToken);
+    setToken(authToken);
+
+    // Fetch user details immediately to verify role string
+    const userResponse = await api.get<User>("/auth/me");
+    setUser(userResponse.data);
+    setLoading(false);
   };
 
   const logout = () => {
