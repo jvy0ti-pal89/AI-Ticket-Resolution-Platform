@@ -22,6 +22,10 @@ htmlcov/
 # User Uploaded Files / Local Media
 backend/app/uploads/*
 !backend/app/uploads/.gitkeep
+# 1. Ignore upload folders and local env files
+echo "backend/uploads/" >> .gitignore
+echo "backend/uploads/*" >> .gitignore
+echo "*.env" >> .gitignore
 
 # Alembic database migration cache
 alembic/readme.txt
